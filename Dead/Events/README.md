@@ -27,7 +27,7 @@ struct EventBase
 // Controller / Event Handler struct (This could be your base GameObject).
 struct Controller
 {
-	bool receiveEvent(int id, EventBase* data)	
+	bool receiveEvent(int id, EventBase* data);
 };
 
 SimpleEventManger<Controller, int, EventBase*> eventMgr;
@@ -38,16 +38,23 @@ SimpleEventManger<Controller, int, EventBase*> eventMgr;
 
 ``` cpp
 // For a controller to subscribe to an event.
+PlayerController *playercontroller = new PlayerController;
 
+eventManager.addController(playercontroller, GAME_START_MSG);
 
 // To send an message.
+SomeEvent eventData;
+eventManager.fireInstantEvent(&eventData, data->getID());
 
 
 // To queue a message for the next frame.
+SomeEvent *eventData = new SomeEvent();
+eventManager.addQueuedEvent(eventData, eventData->getID()); // where getID() returns the events's id used to recieve messags.
 
 
 // To unsubscribe from that event.
-
+eventManager.removeControllerFromEvent(playercontroller, GAME_START_MSG);
+eventManager.removeControllerFromAllEvents(playercontroller);
 ```
 
 ###Key Types
@@ -63,6 +70,9 @@ By default the Manager will delete objects in the queue after its finished with 
 SimpleEventManger<Controller, int, EventBase*, SimpleStackNoDelete<int, EventBase*> > eventMgr;
 `
 
+###Event Swollowing
+
+You may have noticd that the method in the Controller receiveEvent() returns a bool. This is the swollow. If this method returns `true` the event will be swollowed and no longer get sent to other objects that have subscribed to that event.
 
 ###Using a Memory Pool
 
