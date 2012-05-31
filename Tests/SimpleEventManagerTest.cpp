@@ -6,30 +6,10 @@
 #include <iostream>
 
 // TEST SETUP
-struct Controller
-{
-	bool m_hasReceivedEvent;
-
-public:
-
-	Controller()
-	: m_hasReceivedEvent(false)
-	{}
-
-	bool receiveEvent()	{
-		m_hasReceivedEvent = true;
-
-		return true;
-	}
-
-	bool hasReceivedEvent() const {
-		return m_hasReceivedEvent;
-	}
-};
-
 
 // Event Data
 struct IEvent;
+struct Controller;
 
 // Enum Events
 enum EnumEvents
@@ -78,6 +58,30 @@ typedef EventType 	GameEndEventDataPtr;
 typedef EventType	GameStartEventDataPtr;
 typedef Dead::SimpleEventManager<Controller, Events, EventType, Dead::SimpleStackNoDelete<Events, EventType> > EventManager;
 EnumEvents g_events[] = { GAME_START_MSG, PLAYER_DEAD_MSG, GAME_END_MSG, };
+
+
+
+struct Controller
+{
+	bool m_hasReceivedEvent;
+
+public:
+
+	Controller()
+	: m_hasReceivedEvent(false)
+	{}
+
+	bool receiveEvent(EnumEvents const & id, const EventType data)	{
+		m_hasReceivedEvent = true;
+
+		return true;
+	}
+
+	bool hasReceivedEvent() const {
+		return m_hasReceivedEvent;
+	}
+};
+
 
 
 struct IEvent

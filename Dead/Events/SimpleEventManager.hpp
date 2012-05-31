@@ -1,45 +1,6 @@
 // Copyright DeadEnd Games.
 // License: MIT 
 
-/*!
- *	History
- *  April 2012, Phil CK added/created file
- */
-
-
-/*!
- * 	About
- *	Sending and receiving events.
- *	This is a very simplistic event system, there are many possibilites for improvments.
- *	This is also very template heavy, but again designed more for quick easy portablitiy.
- */
-
-
-/*!
- *	Useage
- *	There is a little setup required to use SimpleEventManager
- *	You need a listener class (This could be the base game object class or dedicated reciever class).
- *	You need a base event class (in a push you could use void*).
- *	You need a system of id's for your events, enum's are a good choice for small scale projects.
- *	
- *	Then with all this informations
- *	SimpleEventManager<Listener, EventID, EventBase>
- *
- *	There is an optional template paramater
- *	SimpleEventManager<Listener, EventID, EventBase, FastMemPool>
- *
- *	This gives you a access to a policy that can deal with memory management for
- *	your events. If you have alot of events this is recomended.
- *
- */
-
-
-/*!
- * 	Issues
- *	- If you remove your self from a list while updating you might have some problems.
- *	- Currently events are stored in a map, they need to be stored in a memory pool instead.
- *	- Want to make sure it works well with smart pointers.
- */
 
 
 
@@ -219,7 +180,7 @@ private:
 
 			for(listIt; listIt != list.end(); ++listIt)
 			{
-				bool swallow = (*listIt)->receiveEvent();
+				bool swallow = (*listIt)->receiveEvent(id, data);
 
 				// Break if the message has been swallowed.
 				if(swallow) {
