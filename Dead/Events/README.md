@@ -39,7 +39,6 @@ SimpleEventManger<Controller, int, EventBase*> eventMgr;
 ``` cpp
 // For a controller to subscribe to an event.
 PlayerController *playercontroller = new PlayerController;
-
 eventManager.addController(playercontroller, GAME_START_MSG);
 
 // To send an message.
