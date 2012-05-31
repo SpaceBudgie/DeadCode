@@ -1,14 +1,16 @@
+
 #Event Manager
 
-DeadCodes currently provides one simple event manager. This provides a mechanism to send and receive events in your game.
+DeadCode currently provides one simple event manager. This provides a mechanism to send and receive events in your game.
 
 ###Files
 EventManager.hpp - access to SimpleEventManager.hpp and all its policies.
+
 SimpleEventManger.hpp - access only to the event manager.
 
 ##Simple Event Manager
 
-The event manager's pre-requisits are an `event handeling` class (referred to as the controller), The `id type` you wish to use, and a pointer to the `base Event` class.
+The event manager's pre-requisits are an `event handeling` class (referred to as the controller), The `id type` you wish to use, and a pointer to the `Base Event` class.
 
 
 ###Basic Setup
@@ -24,12 +26,13 @@ The event manager's pre-requisits are an `event handeling` class (referred to as
 struct EventBase
 {};
 
-// Controller / Event Handler struct (This could be your base GameObject).
+// Controller / Event Handler struct (This could be your base GameObject or Entity etc).
 struct Controller
 {
 	bool receiveEvent(int id, EventBase* data);
 };
 
+// Setup the manager.
 SimpleEventManger<Controller, int, EventBase*> eventMgr;
 
 ```
@@ -48,13 +51,19 @@ eventManager.fireInstantEvent(&eventData, data->getID());
 
 // To queue a message for the next frame.
 SomeEvent *eventData = new SomeEvent();
-eventManager.addQueuedEvent(eventData, eventData->getID()); // where getID() returns the events's id used to recieve messags.
+eventManager.addQueuedEvent(eventData, eventData->getID()); // where getID() returns the events's id used to receive messages.
 
+// To fire all queued events.
+eventManager.fireQueuedEvents();
 
 // To unsubscribe from that event.
 eventManager.removeControllerFromEvent(playercontroller, GAME_START_MSG);
 eventManager.removeControllerFromAllEvents(playercontroller);
 ```
+
+###Event Swollowing
+
+You may have noticed that the method in the Controller receiveEvent() returns a bool. This is the swollow. If this method returns `true` the event will be swollowed and no longer get sent to other objects that have subscribed to that event.
 
 ###Key Types
 
@@ -69,13 +78,10 @@ By default the Manager will delete objects in the queue after its finished with 
 SimpleEventManger<Controller, int, EventBase*, SimpleStackNoDelete<int, EventBase*> > eventMgr;
 `
 
-###Event Swollowing
-
-You may have noticd that the method in the Controller receiveEvent() returns a bool. This is the swollow. If this method returns `true` the event will be swollowed and no longer get sent to other objects that have subscribed to that event.
-
 ###Using a Memory Pool
 
-Not currently supported with-in the EventManager. 
+Not currently supported in the EventManager yet, will be added soon.
+It will support boost::pool and its own internal one.
 
 
 ###Using Smart Pointers
